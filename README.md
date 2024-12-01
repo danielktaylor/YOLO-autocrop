@@ -6,6 +6,13 @@ This is useful if you have training data from a camera that uses a different ima
 
 ## Usage
 
+Expected directory structure:
+
+- `./input/images`
+	- All input images
+- `./input/labels`
+	- All YOLOv11 label files, one per image, with `.txt` extension (see [YOLO docs](https://docs.ultralytics.com/datasets/segment/#supported-dataset-formats))
+
 `autocrop.py <width> <height>`
 
 Output debug images by including `--debug` flag.
