@@ -7,3 +7,7 @@ This is useful if you have training data from a camera that uses a different ima
 ## Usage
 
 `autocrop.py <width> <height>`
+
+Output debug images by including `--debug` flag.
+
+Preview individual image polygons with `preview.py <image> <labels>`
