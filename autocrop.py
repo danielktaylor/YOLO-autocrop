@@ -98,20 +98,6 @@ def adjust_polygon(polygon, orig_width, orig_height, crop_left, crop_right, crop
 
     return adjusted
 
-#def adjust_polygon(polygon, orig_width, orig_height, crop_x, crop_y, cropped_width, cropped_height, target_width, target_height):
-#    adjusted = []
-#    scale_x = target_width / cropped_width
-#    scale_y = target_height / cropped_height
-#
-#    for i in range(0, len(polygon), 2):
-#        x = polygon[i] * orig_width - crop_x
-#        y = polygon[i + 1] * orig_height - crop_y
-#        x = max(0, min(x, cropped_width)) * scale_x / target_width
-#        y = max(0, min(y, cropped_height)) * scale_y / target_height
-#        adjusted.extend([x, y])
-#
-#    return adjusted
-
 def calculate_crop(width, height, crop_x, crop_y, polygons):
     """
     Calculate the optimal cropping strategy to minimize the area of polygons lost.
