@@ -75,19 +75,41 @@ def generate_debug_image(image, labels, output_path, orig_image):
     final_image.paste(lower_image, (0, upper_image.height))
     final_image.save(os.path.join(output_path, Path(image).stem + ".png"))
 
-def adjust_polygon(polygon, orig_width, orig_height, crop_x, crop_y, cropped_width, cropped_height, target_width, target_height):
+def adjust_polygon(polygon, orig_width, orig_height, crop_left, crop_right, crop_top, crop_bottom, cropped_width, cropped_height, target_width, target_height):
     adjusted = []
     scale_x = target_width / cropped_width
     scale_y = target_height / cropped_height
 
     for i in range(0, len(polygon), 2):
-        x = polygon[i] * orig_width - crop_x
-        y = polygon[i + 1] * orig_height - crop_y
-        x = max(0, min(x, cropped_width)) * scale_x / target_width
-        y = max(0, min(y, cropped_height)) * scale_y / target_height
+        # Convert normalized coordinates to pixel coordinates and adjust for crops
+        x = polygon[i] * orig_width - crop_left
+        y = polygon[i + 1] * orig_height - crop_top
+        
+        # Clamp to the cropped region
+        x = max(0, min(x, cropped_width))
+        y = max(0, min(y, cropped_height))
+        
+        # Scale to target dimensions and normalize
+        x = x * scale_x / target_width
+        y = y * scale_y / target_height
+        
         adjusted.extend([x, y])
 
     return adjusted
+
+#def adjust_polygon(polygon, orig_width, orig_height, crop_x, crop_y, cropped_width, cropped_height, target_width, target_height):
+#    adjusted = []
+#    scale_x = target_width / cropped_width
+#    scale_y = target_height / cropped_height
+#
+#    for i in range(0, len(polygon), 2):
+#        x = polygon[i] * orig_width - crop_x
+#        y = polygon[i + 1] * orig_height - crop_y
+#        x = max(0, min(x, cropped_width)) * scale_x / target_width
+#        y = max(0, min(y, cropped_height)) * scale_y / target_height
+#        adjusted.extend([x, y])
+#
+#    return adjusted
 
 def calculate_crop(width, height, crop_x, crop_y, polygons):
     """
@@ -188,7 +210,7 @@ def process_image(image_path, label_path, output_image_path, output_label_path, 
         cropped_height = new_height
 
     crop_left, crop_right, crop_top, crop_bottom = calculate_crop(orig_width, orig_height, crop_x*2, crop_y*2, [lst for _, lst in objects])
-    cropped_image = image.crop((crop_left, crop_top, cropped_width - crop_right, cropped_height - crop_bottom))
+    cropped_image = image.crop((crop_left, crop_top, orig_width - crop_right, orig_height - crop_bottom))
 
     # Resize the image
     resized_image = cropped_image.resize((target_width, target_height))
@@ -196,7 +218,7 @@ def process_image(image_path, label_path, output_image_path, output_label_path, 
     # Adjust the labels
     adjusted_objects = []
     for class_index, points in objects:
-        adjusted_points = adjust_polygon(points, orig_width, orig_height, crop_x, crop_y, cropped_width, cropped_height, target_width, target_height)
+        adjusted_points = adjust_polygon(points, orig_width, orig_height, crop_left, crop_right, crop_top, crop_bottom, cropped_width, cropped_height, target_width, target_height)
         adjusted_objects.append((class_index, adjusted_points))
 
     # Save the processed image and labels
