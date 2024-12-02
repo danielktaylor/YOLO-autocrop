@@ -38,43 +38,47 @@ def generate_debug_image(image, labels, output_path, orig_image):
     width = img.size[0]
     height = img.size[1]
 
-    x = []
-    y = []
+    labeled_images = []
 
     # YOLO labels file format:
     # https://docs.ultralytics.com/datasets/segment/#supported-dataset-formats
     with open(labels) as polygons:
         for line in polygons:
+            x = []
+            y = []
+
             points = line.split()[1:]
             x = points[::2] # all even indexes
             y = points[1::2] # all odd indexes
-            break # we are only supporting a single label right now
 
-    # Convert from percentages to actual pixel values
-    x = [float(pt) * width for pt in x]
-    y = [float(pt) * height for pt in y]
+            # Convert from percentages to actual pixel values
+            x = [float(pt) * width for pt in x]
+            y = [float(pt) * height for pt in y]
 
-    # convert values to ints
-    x_int = map(int, x)
-    y_int = map(int, y)
+            # convert values to ints
+            x_int = map(int, x)
+            y_int = map(int, y)
 
-    polygon_image = img.copy()
-    draw = ImageDraw.Draw(polygon_image)
-    if len(x) != 0:
-        draw.polygon(list(zip(x_int,y_int)), fill = "wheat")
+            polygon_image = img.copy()
+            draw = ImageDraw.Draw(polygon_image)
+            if len(x) != 0:
+                draw.polygon(list(zip(x_int,y_int)), fill = "green")
 
-    lower_image = Image.blend(img, polygon_image, 0.5)
-    upper_image = Image.open(orig_image).convert('RGBA')
+            merged_image = Image.blend(img, polygon_image, 0.5)
+            img = merged_image
 
-    # Calculate the width and height of the new image
-    width = max(lower_image.width, upper_image.width)
-    height = lower_image.height + upper_image.height
-    
-    # Create a new blank image with the calculated dimensions
-    final_image = Image.new("RGB", (width, height), (255, 255, 255))  # White background
-    final_image.paste(upper_image, (0, 0))
-    final_image.paste(lower_image, (0, upper_image.height))
-    final_image.save(os.path.join(output_path, Path(image).stem + ".png"))
+        upper_image = Image.open(orig_image).convert('RGBA')
+        lower_image = img
+
+        # Calculate the width and height of the new image
+        width = max(lower_image.width, upper_image.width)
+        height = lower_image.height + upper_image.height
+                    
+        # Create a new blank image with the calculated dimensions
+        combined_image = Image.new("RGB", (width, height), (255, 255, 255))  # White background
+        combined_image.paste(upper_image, (0, 0))
+        combined_image.paste(lower_image, (0, upper_image.height))
+        combined_image.save(os.path.join(output_path, Path(image).stem + ".png"))
 
 def adjust_polygon(polygon, orig_width, orig_height, crop_left, crop_right, crop_top, crop_bottom, cropped_width, cropped_height, target_width, target_height):
     adjusted = []
