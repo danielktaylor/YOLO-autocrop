@@ -25,6 +25,6 @@ See `sample` directory.
 
 This was generated using the following two commands (after moving the `input` directory to the project's root directory):
 
-`python preview.py ./input/images/fruit.jpg ./input/labels/fruit.txt`
+`python preview.py ./input/images/apple.jpg ./input/labels/apple.txt`
 
 `python autocrop.py 300 400 --debug`
