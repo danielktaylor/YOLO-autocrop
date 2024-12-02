@@ -55,12 +55,13 @@ def generate_debug_image(image, labels, output_path, orig_image):
     y = [float(pt) * height for pt in y]
 
     # convert values to ints
-    x = map(int, x)
-    y = map(int, y)
+    x_int = map(int, x)
+    y_int = map(int, y)
 
     polygon_image = img.copy()
     draw = ImageDraw.Draw(polygon_image)
-    draw.polygon(list(zip(x,y)), fill = "wheat")
+    if len(x) != 0:
+        draw.polygon(list(zip(x_int,y_int)), fill = "wheat")
 
     lower_image = Image.blend(img, polygon_image, 0.5)
     upper_image = Image.open(orig_image).convert('RGBA')
