@@ -17,7 +17,7 @@ Expected directory structure:
 
 Output debug images by including `--debug` flag.
 
-Preview individual image polygons with `preview.py <image> <labels>`
+Preview individual image polygons with `preview.py <image> <labels>` or many images with `preview_all.py`
 
 ## Example
 
