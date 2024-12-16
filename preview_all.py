@@ -22,14 +22,14 @@ def main():
         sys.exit(1)
 
     # Get a list of files in each directory
-    image_files = [f for f in os.listdir(image_dir) if f.lower().endswith(('.jpg', '.jpeg'))]
+    image_files = [f for f in os.listdir(image_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
     
     for image_file in image_files:
         img = Image.open(os.path.join(image_dir, image_file)).convert('RGBA')
         width = img.size[0]
         height = img.size[1]
 
-        label_file = os.path.join(label_dir, re.sub(r'\.(jpeg|jpg|JPEG|JPG)$', '.txt', image_file))
+        label_file = os.path.join(label_dir, re.sub(r'\.(jpeg|jpg|JPEG|JPG|png|PNG)$', '.txt', image_file))
 
         # YOLOv11 labels file format:
         # https://docs.ultralytics.com/datasets/segment/#supported-dataset-formats
