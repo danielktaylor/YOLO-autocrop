@@ -1,5 +1,7 @@
 import argparse
 import os
+import re
+import sys
 from PIL import Image
 from PIL import ImageDraw
 
@@ -27,7 +29,7 @@ def main():
         width = img.size[0]
         height = img.size[1]
 
-        label_file = os.path.join(label_dir, image_file + ".txt")
+        label_file = os.path.join(label_dir, re.sub(r'\.(jpeg|jpg|JPEG|JPG)$', '.txt', image_file))
 
         # YOLOv11 labels file format:
         # https://docs.ultralytics.com/datasets/segment/#supported-dataset-formats
