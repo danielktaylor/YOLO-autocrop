@@ -35,6 +35,9 @@ def main():
         # https://docs.ultralytics.com/datasets/segment/#supported-dataset-formats
         with open(label_file) as polygons:
             for line in polygons:
+                if line.strip() == "":
+                    continue
+
                 x = []
                 y = []
 
