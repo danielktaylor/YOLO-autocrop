@@ -17,8 +17,6 @@ Expected directory structure:
 
 Output debug images by including `--debug` flag.
 
-Preview individual image polygons with `preview.py <image> <labels>` or many images with `preview_all.py`
-
 ## Example
 
 See `sample` directory.
@@ -28,3 +26,14 @@ This was generated using the following two commands (after moving the `input` di
 `python preview.py ./input/images/apples.jpg ./input/labels/apples.txt`
 
 `python autocrop.py 300 400 --debug`
+
+# Other utilities
+
+* **preview.py**: Preview individual image polygons with `preview.py <image> <labels>`.
+* **preview_all.py**: Draw polygons on an entire directory of images.
+* **add_image_padding.sh**: Draw black bars around rectangular images to make them square.
+* **adjust_labels_for_800x800.py**: Adjust polygon coordinates for 800x600 -> 800x800.
+* **convert_dataset_for_classification.py**: Convert an object detection dataset to a classification dataset. Crops around objects and organizes files into the correct directory structure.
+* **convert_to_greyscale.py**: Convert RGB images to greyscale, but keep the images as 3-channel RGB format.
+* **find_missing_file_pairs.py**: Check if all image files have a matching .txt label file
+* **organize_files_by_class.py**: Move files into folders based on their class (in .txt files)
